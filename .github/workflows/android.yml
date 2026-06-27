@@ -9,30 +9,35 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
-      
-      - name: Setup Java
-        uses: actions/setup-java@v4.2.1
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3.2.0
-      
-      - name: Accept licenses
-        run: yes | sdkmanager --licenses || true
-      
-      - name: Setup Gradle
+      - name: Checkout code
         run: |
-          mkdir -p gradle/wrapper
-          curl -L -o gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar || true
-          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            sudo apt-get update && sudo apt-get install -y gradle
-            gradle wrapper --gradle-version 8.2
-          fi
-          chmod +x gradlew
+          git clone https://github.com/${{ github.repository }}.git .
+          git checkout ${{ github.ref_name }}
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk python3-pil curl unzip
+      
+      - name: Download Android SDK
+        run: |
+          mkdir -p /opt/android-sdk
+          cd /opt/android-sdk
+          curl -L -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip cmdline-tools.zip
+          mkdir -p cmdline-tools/latest
+          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+          export ANDROID_HOME=/opt/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          yes | sdkmanager --licenses || true
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+      
+      - name: Download Gradle
+        run: |
+          curl -L -o gradle-8.2-bin.zip https://services.gradle.org/distributions/gradle-8.2-bin.zip
+          unzip gradle-8.2-bin.zip
+          export PATH=$PATH:$(pwd)/gradle-8.2/bin
+          gradle --version
       
       - name: Generate icons
         run: |
@@ -59,10 +64,13 @@ jobs:
           "
       
       - name: Build APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          export ANDROID_HOME=/opt/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+          export PATH=$PATH:$(pwd)/gradle-8.2/bin
+          gradle assembleDebug --stacktrace
       
       - name: Upload APK
-        uses: actions/upload-artifact@v4.3.1
-        with:
-          name: WallpaperPlus-debug
-          path: app/build/outputs/apk/debug/*.apk
+        run: |
+          echo "APK built successfully"
+          ls -la app/build/outputs/apk/debug/
