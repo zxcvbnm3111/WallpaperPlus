@@ -24,18 +24,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
+    
     sourceSets {
         main {
             assets.srcDirs = ['src/main/assets']
         }
     }
-}
-
-repositories {
-    maven { url 'https://api.xposed.info/' }
-    google()
-    mavenCentral()
 }
 
 dependencies {
@@ -45,5 +39,4 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
