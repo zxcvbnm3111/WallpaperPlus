@@ -127,4 +127,4 @@ print('Icons generated successfully')
       with:
         name: WallpaperPlus-release
         path: app/build/outputs/apk/release/*.apk
-        retention-days: 30
+        retention-days: 30 
