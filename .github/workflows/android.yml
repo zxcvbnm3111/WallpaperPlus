@@ -1,26 +1,63 @@
-name: Android CI
+name: Build APK
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-    - name: set up JDK 11
-      uses: actions/setup-java@v4
       with:
-        java-version: '11'
+        node-version: '20'
+    
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '17'
         distribution: 'temurin'
-        cache: gradle
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    - name: Build with Gradle
-      run: ./gradlew build
+    
+    - uses: android-actions/setup-android@v3
+    
+    - run: yes | sdkmanager --licenses || true
+    
+    - name: Setup Gradle
+      run: |
+        mkdir -p gradle/wrapper
+        curl -L -o gradle/wrapper/gradle-wrapper.jar https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar || true
+        if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
+          sudo apt-get update && sudo apt-get install -y gradle
+          gradle wrapper --gradle-version 8.2
+        fi
+        chmod +x gradlew
+    
+    - name: Generate icons
+      run: |
+        python3 -c "
+import os
+from PIL import Image, ImageDraw, ImageFont
+sizes = {'mipmap-mdpi':48,'mipmap-hdpi':72,'mipmap-xhdpi':96,'mipmap-xxhdpi':144,'mipmap-xxxhdpi':192}
+for folder,size in sizes.items():
+    os.makedirs(f'app/src/main/res/{folder}', exist_ok=True)
+    img=Image.new('RGBA',(size,size),(0,0,0,0))
+    draw=ImageDraw.Draw(img)
+    p=size//12
+    draw.rounded_rectangle([p,p,size-p,size-p],radius=size//6,fill=(255,107,107,255))
+    try: font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',size//2)
+    except: font=ImageFont.load_default()
+    bbox=draw.textbbox((0,0),'W',font=font)
+    tw,th=bbox[2]-bbox[0],bbox[3]-bbox[1]
+    draw.text(((size-tw)//2,(size-th)//2-size//20),'W',fill=(255,255,255,255),font=font)
+    img.save(f'app/src/main/res/{folder}/ic_launcher.png')
+    img.save(f'app/src/main/res/{folder}/ic_launcher_round.png')
+print('done')
+"
+    
+    - name: Build APK
+      run: ./gradlew assembleDebug --stacktrace
+    
+    - uses: actions/upload-artifact@v4
+      with:
+        name: WallpaperPlus-debug
+        path: app/build/outputs/apk/debug/*.apk
