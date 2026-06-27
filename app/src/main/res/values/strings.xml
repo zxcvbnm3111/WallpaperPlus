@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WallpaperPlus</string>
+    <string name="app_description">OPlus/ColorOS 壁纸增强模块</string>
+
+    <!-- 主界面 -->
+    <string name="title_wallpaper">光栅壁纸</string>
+    <string name="title_lyric">锁屏歌词</string>
+    <string name="title_motion">3D壁纸晃动</string>
+    <string name="title_about">关于</string>
+
+    <string name="desc_wallpaper">在壁纸中实现光栅视差效果，支持多层景深</string>
+    <string name="desc_lyric">在锁屏界面显示实时歌词，支持网易云、QQ音乐、酷狗等</string>
+    <string name="desc_motion">利用陀螺仪实现3D壁纸晃动效果</string>
+
+    <!-- 光栅壁纸设置 -->
+    <string name="pref_enable_raster">启用光栅壁纸</string>
+    <string name="pref_raster_intensity">光栅强度</string>
+    <string name="pref_layer_count">图层数量</string>
+    <string name="pref_parallax_scale">视差缩放</string>
+    <string name="pref_raster_speed">动画速度</string>
+
+    <!-- 歌词设置 -->
+    <string name="pref_enable_lyric">启用锁屏歌词</string>
+    <string name="pref_lyric_position">歌词位置</string>
+    <string name="pref_lyric_size">字体大小</string>
+    <string name="pref_lyric_color">字体颜色</string>
+    <string name="pref_lyric_style">显示样式</string>
+    <string name="pref_lyric_apps">适配应用</string>
+
+    <string-array name="lyric_position_entries">
+        <item>顶部</item>
+        <item>中部</item>
+        <item>底部</item>
+    </string-array>
+
+    <string-array name="lyric_style_entries">
+        <item>经典单行</item>
+        <item>双行对比</item>
+        <item>卡拉OK逐字</item>
+    </string-array>
+
+    <!-- 3D晃动设置 -->
+    <string name="pref_enable_motion">启用3D晃动</string>
+    <string name="pref_motion_sensitivity">灵敏度</string>
+    <string name="pref_motion_smooth">平滑度</string>
+    <string name="pref_motion_direction">响应方向</string>
+
+    <!-- 通用 -->
+    <string name="hint_restart">修改后需重启目标应用生效</string>
+    <string name="btn_save">保存设置</string>
+    <string name="btn_reset">恢复默认</string>
+    <string name="status_enabled">已启用</string>
+    <string name="status_disabled">已禁用</string>
+    <string name="about_version">版本: %s</string>
+    <string name="about_author">作者: WallpaperPlus Team</string>
+    <string name="about_thanks">特别感谢: LSPosed 社区 | OPlus 开发组</string>
+</resources>

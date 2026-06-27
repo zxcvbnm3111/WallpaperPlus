@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="xposed_scope">
+        <item>com.android.systemui</item>
+        <item>com.android.launcher</item>
+        <item>com.android.launcher3</item>
+        <item>com.oppo.launcher</item>
+        <item>com.coloros.launcher</item>
+        <item>com.heytap.launcher</item>
+        <item>com.netease.cloudmusic</item>
+        <item>com.tencent.qqmusic</item>
+        <item>com.kugou.android</item>
+        <item>com.kugou.android.lite</item>
+        <item>cmccwm.mobilemusic</item>
+        <item>com.spotify.music</item>
+        <item>com.apple.android.music</item>
+    </string-array>
+
+    <string-array name="lyric_position_values">
+        <item>top</item>
+        <item>center</item>
+        <item>bottom</item>
+    </string-array>
+
+    <string-array name="lyric_style_values">
+        <item>single</item>
+        <item>dual</item>
+        <item>karaoke</item>
+    </string-array>
+</resources>

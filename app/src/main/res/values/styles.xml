@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.WallpaperPlus.SeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressTint">@color/primary</item>
+        <item name="android:thumbTint">@color/primary</item>
+    </style>
+
+    <style name="Widget.WallpaperPlus.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:thumbTint">@color/primary</item>
+        <item name="android:trackTint">@color/surface</item>
+    </style>
+
+    <style name="Widget.WallpaperPlus.RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:buttonTint">@color/primary</item>
+        <item name="android:textColor">@color/text_primary</item>
+    </style>
+</resources>
