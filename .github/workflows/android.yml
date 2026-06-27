@@ -14,19 +14,29 @@ jobs:
           git clone https://github.com/${{ github.repository }}.git .
           git checkout ${{ github.ref_name }}
       
-      - name: Install dependencies
+      - name: Install Java 17
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk python3-pil curl unzip
+          sudo apt-get install -y wget apt-transport-https
+          wget -O- https://apt.corretto.aws/corretto.key | sudo apt-key add -
+          sudo add-apt-repository 'deb https://apt.corretto.aws stable main'
+          sudo apt-get update
+          sudo apt-get install -y java-17-amazon-corretto-jdk
+          java -version
+          javac -version
+      
+      - name: Install other dependencies
+        run: |
+          sudo apt-get install -y python3-pil curl unzip
       
       - name: Download Android SDK
         run: |
           mkdir -p /opt/android-sdk
           cd /opt/android-sdk
           curl -L -o cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip cmdline-tools.zip
+          unzip -q cmdline-tools.zip
           mkdir -p cmdline-tools/latest
-          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+          mv cmdline-tools/bin cmdline-tools/lib cmdline-tools/NOTICE.txt cmdline-tools/source.properties cmdline-tools/latest/ 2>/dev/null || true
           export ANDROID_HOME=/opt/android-sdk
           export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
           yes | sdkmanager --licenses || true
@@ -35,7 +45,7 @@ jobs:
       - name: Download Gradle
         run: |
           curl -L -o gradle-8.2-bin.zip https://services.gradle.org/distributions/gradle-8.2-bin.zip
-          unzip gradle-8.2-bin.zip
+          unzip -q gradle-8.2-bin.zip
           export PATH=$PATH:$(pwd)/gradle-8.2/bin
           gradle --version
       
@@ -65,6 +75,7 @@ jobs:
       
       - name: Build APK
         run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
           export ANDROID_HOME=/opt/android-sdk
           export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
           export PATH=$PATH:$(pwd)/gradle-8.2/bin
