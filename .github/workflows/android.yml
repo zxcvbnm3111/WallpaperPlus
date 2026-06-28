@@ -11,12 +11,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        # ❌ 删除 node-version: '20' —— checkout 没有此参数
 
-      - name: Setup Java 17          # ✅ Java 11 → 17
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'         # ✅ 改为 17
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Verify Java
@@ -53,16 +52,16 @@ jobs:
             print('done')
           "
 
-      - name: Download and setup Gradle
+      - name: Download and setup Gradle 8.2
         run: |
-          curl -L -o gradle-7.5-bin.zip https://services.gradle.org/distributions/gradle-7.5-bin.zip
-          unzip -q gradle-7.5-bin.zip
-          export PATH=$PATH:$(pwd)/gradle-7.5/bin
+          curl -L -o gradle-8.2-bin.zip https://services.gradle.org/distributions/gradle-8.2-bin.zip
+          unzip -q gradle-8.2-bin.zip
+          export PATH=$PATH:$(pwd)/gradle-8.2/bin
           gradle --version
 
       - name: Build APK
         run: |
-          export PATH=$PATH:$(pwd)/gradle-7.5/bin
+          export PATH=$PATH:$(pwd)/gradle-8.2/bin
           gradle assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK
