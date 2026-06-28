@@ -1,4 +1,17 @@
-- name: Setup Gradle
-  uses: gradle/actions/setup-gradle@v3
-- name: Build APK
-  run: ./gradlew assembleDebug
+// Top-level build file
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
