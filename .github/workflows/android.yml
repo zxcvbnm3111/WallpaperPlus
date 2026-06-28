@@ -14,10 +14,10 @@ jobs:
         with:
           node-version: '20'
       
-      - name: Setup Java 17
+      - name: Setup Java 11
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
       
       - name: Verify Java
@@ -57,7 +57,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.2'
+          gradle-version: '7.5'
       
       - name: Build APK
         run: gradle assembleDebug --stacktrace
