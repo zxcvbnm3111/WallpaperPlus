@@ -1,18 +1,4 @@
-// Top-level build file
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://api.xposed.info/' }
-    }
-}
+- name: Setup Gradle
+  uses: gradle/actions/setup-gradle@v3
+- name: Build APK
+  run: ./gradlew assembleDebug
