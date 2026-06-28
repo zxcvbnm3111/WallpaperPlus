@@ -11,25 +11,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          node-version: '20'
-      
-      - name: Setup Java 11
+        # ❌ 删除 node-version: '20' —— checkout 没有此参数
+
+      - name: Setup Java 17          # ✅ Java 11 → 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'         # ✅ 改为 17
           distribution: 'temurin'
-      
+
       - name: Verify Java
         run: |
           java -version
           javac -version
-      
+
       - name: Install Python dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pil
-      
+
       - name: Generate icons
         run: |
           python3 -c "
@@ -37,35 +36,35 @@ jobs:
           from PIL import Image, ImageDraw, ImageFont
           sizes = {'mipmap-mdpi':48,'mipmap-hdpi':72,'mipmap-xhdpi':96,'mipmap-xxhdpi':144,'mipmap-xxxhdpi':192}
           for folder,size in sizes.items():
-              os.makedirs(f'app/src/main/res/{folder}', exist_ok=True)
-              img=Image.new('RGBA',(size,size),(0,0,0,0))
-              draw=ImageDraw.Draw(img)
-              p=size//12
-              draw.rounded_rectangle([p,p,size-p,size-p],radius=size//6,fill=(255,107,107,255))
-              try:
-                  font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',size//2)
-              except:
-                  font=ImageFont.load_default()
-              bbox=draw.textbbox((0,0),'W',font=font)
-              tw,th=bbox[2]-bbox[0],bbox[3]-bbox[1]
-              draw.text(((size-tw)//2,(size-th)//2-size//20),'W',fill=(255,255,255,255),font=font)
-              img.save(f'app/src/main/res/{folder}/ic_launcher.png')
-              img.save(f'app/src/main/res/{folder}/ic_launcher_round.png')
-          print('done')
+            os.makedirs(f'app/src/main/res/{folder}', exist_ok=True)
+            img=Image.new('RGBA',(size,size),(0,0,0,0))
+            draw=ImageDraw.Draw(img)
+            p=size//12
+            draw.rounded_rectangle([p,p,size-p,size-p],radius=size//6,fill=(255,107,107,255))
+            try:
+              font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',size//2)
+            except:
+              font=ImageFont.load_default()
+            bbox=draw.textbbox((0,0),'W',font=font)
+            tw,th=bbox[2]-bbox[0],bbox[3]-bbox[1]
+            draw.text(((size-tw)//2,(size-th)//2-size//20),'W',fill=(255,255,255,255),font=font)
+            img.save(f'app/src/main/res/{folder}/ic_launcher.png')
+            img.save(f'app/src/main/res/{folder}/ic_launcher_round.png')
+            print('done')
           "
-      
+
       - name: Download and setup Gradle
         run: |
           curl -L -o gradle-7.5-bin.zip https://services.gradle.org/distributions/gradle-7.5-bin.zip
           unzip -q gradle-7.5-bin.zip
           export PATH=$PATH:$(pwd)/gradle-7.5/bin
           gradle --version
-      
+
       - name: Build APK
         run: |
           export PATH=$PATH:$(pwd)/gradle-7.5/bin
           gradle assembleDebug --stacktrace --no-daemon
-      
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
